@@ -1,17 +1,20 @@
-# https://leetcode.com/problems/lru-cache/
+"""
+https://leetcode.com/problems/lru-cache/
 
-# Design a data structure that follows the
-# constraints of a Least Recently Used (LRU) cache.
+Design a data structure that follows the
+constraints of a Least Recently Used (LRU) cache.
 
-# Implement the LRUCache class:
+Implement the LRUCache class:
 
-#    LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
-#    int get(int key) Return the value of the key if the key exists, otherwise return -1.
-#    void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+   LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+   int get(int key) Return the value of the key if the key exists, otherwise return -1.
+   void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
 
-# The functions get and put must each run in O(1) average time complexity.
+The functions get and put must each run in O(1) average time complexity.
+"""  # noqa: E501
 from collections import UserDict
 from dataclasses import dataclass
+
 
 @dataclass
 class Node:
@@ -31,7 +34,6 @@ class LRUCache(UserDict):
         self.head: str = ""
         self.tail: str = ""
 
-
     def _update_head(self, key: str) -> None:
         if (head_node := self.super_get(self.head)) is not None:
             head_node.prev = key
@@ -44,21 +46,21 @@ class LRUCache(UserDict):
         tail_node: Node = super().__getitem__(self.tail)
         new_tail: Node = super().__getitem__(tail_node.prev)
 
-        self.tail = tail_node.prev
+        self.tail = tail_node.prev or ""
         new_tail.next_ = None
         super().__delitem__(self.tail)
 
     def _unchain_node(self, key: str) -> None:
         node: Node = super().__getitem__(key)
-        if (left_node := self.super_get(node.prev)) is not None:
+        if (left_node := self.super_get(node.prev or "")) is not None:
             left_node.next_ = node.next_
             if not left_node.next_:
-                self.tail = node.prev
+                self.tail = node.prev or ""
 
-        if (right_node := self.super_get(node.next_)) is not None:
+        if (right_node := self.super_get(node.next_ or "")) is not None:
             right_node.prev = node.prev
 
-    def super_get(self, key: str, default=None) -> int | None:
+    def super_get(self, key: str, default=None) -> Node | None:
         try:
             return super().__getitem__(key)
         except KeyError:
@@ -76,7 +78,7 @@ class LRUCache(UserDict):
             return item.value
 
         return None
-    
+
     def __setitem__(self, key: str, value: int):
         """
         Set an item to the head of the Cache
@@ -98,9 +100,6 @@ class LRUCache(UserDict):
 
         if self.__len__() > self.capacity:
             self._pop_tail()
-
-
-import pytest
 
 
 def test_lru_cache():

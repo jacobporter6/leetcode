@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+black algorithms
+ruff algorithms --fix
+mypy algorithms
