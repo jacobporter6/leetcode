@@ -24,6 +24,8 @@ def climbing_stairs(n: int) -> int:
 @pytest.mark.parametrize(
     "test_input,expected",
     [
+        (0, 0),
+        (1, 1),
         (2, 2),
         (3, 3),
         (4, 5),
