@@ -11,40 +11,22 @@ nums = [], expected = 0
 """  # noqa: E501
 from __future__ import annotations
 
-from itertools import chain
 
 import pytest
 
 
-def get_sums(
+def rob_houses(
     houses: list[int], value: int = 0, combinations: list[int] | None = None
-) -> list[int]:
+) -> int:
     combinations = combinations or []
 
     if houses:
         for idx, x in enumerate(houses[: len(houses) // 2 + 1]):
-            return get_sums(houses[idx + 2 :], value + x, combinations)
+            return rob_houses(houses[idx + 2 :], value + x, combinations)
 
     else:
         combinations.append(value)
 
-    return combinations
-
-
-def rob_houses(houses: list[int]) -> int:
-    """
-    Find the maximum amount of money that can be robbed from a list of houses
-    """
-    combinations = list(
-        chain(
-            *(
-                get_sums(
-                    houses[idx:],
-                )
-                for idx, x in enumerate(houses[: len(houses) // 2 + 1])
-            )
-        )
-    ) or [0]
     return max(combinations)
 
 
