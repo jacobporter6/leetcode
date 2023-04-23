@@ -11,18 +11,19 @@ You must write an algorithm that runs in O(n) time and without using the divisio
 import pytest
 
 
-def product_of_array_except_self(nums: list[int]):
+def create_rolling_product(nums: list[int]) -> list[int]:
     last = 1
-    forward_rolling_product: list[int] = [last]
+    rolling_product: list[int] = [last]
     for i in nums[:-1]:
         last *= i
-        forward_rolling_product.append(last)
+        rolling_product.append(last)
 
-    last = 1
-    backward_rolling_product: list[int] = [last]
-    for j in nums[:0:-1]:  # reverse excluding last
-        last *= j
-        backward_rolling_product.append(last)
+    return rolling_product
+
+
+def product_of_array_except_self(nums: list[int]):
+    forward_rolling_product = create_rolling_product(nums)
+    backward_rolling_product = create_rolling_product(nums[::-1])
 
     output: list[int] = []
     for i in range(len(nums)):
