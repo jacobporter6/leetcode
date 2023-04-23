@@ -8,13 +8,12 @@ import pytest
 
 
 def contains_duplicate(nums: list[int]) -> bool:
-    sorted_nums = sorted(nums)
+    hashset: set[int] = set()
 
-    previous = None
-    for current in sorted_nums:
-        if previous == current:
+    for i in nums:
+        if i in hashset:
             return True
-        previous = current
+        hashset.add(i)
 
     return False
 
