@@ -16,7 +16,37 @@ from typing import Deque
 import pytest
 
 
-def get_coin_number(coins_: list[int], amount: int) -> int:
+def get_coin_number(
+    coins: list[int], amount: int, nodes: set[int] | None = None
+) -> int:
+    """
+    Target: 11
+    Coins: [1, 2, 5]
+
+    Let f(n) be the minimum number of coins required to make up amount n
+
+    Therefore,
+    f(11) = min(f([11 - 1] = 10), f([11 - 2] = 9), f([11 - 5] = 6)) + 1
+
+    f(10) = min(f([10 - 2] = 8), f([10 - 5] = 5)) + 1
+    f(9) = min(f(4), f(7)) + 1
+    f(6) = min(f(1)) + 1
+    """
+    # Keep track of previously calculated values
+    solns: list[int] = [amount + 1] * (amount + 1)
+
+    # f(0) = 0
+    solns[0] = 0
+
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if i - coin >= 0:
+                solns[i] = min(solns[i], solns[i - coin] + 1)
+
+    return solns[amount] if (solns[amount] <= amount) else -1
+
+
+def old_get_coin_number(coins_: list[int], amount: int) -> int:
     """
     Get number of coins required from array to make up amount
     """
